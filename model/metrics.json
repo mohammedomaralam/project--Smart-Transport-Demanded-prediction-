@@ -1,0 +1,114 @@
+{
+  "trained_at": "2026-10-25 19:51",
+  "dataset_file": "Smart_Transport_Dataset.xlsx",
+  "rows": 12000,
+  "n_train": 9600,
+  "n_test": 2400,
+  "model": "RandomForestRegressor (n_estimators=200, min_samples_leaf=2)",
+  "target": "seats_booked",
+  "mae": 2.686,
+  "rmse": 3.432,
+  "r2": 0.9225,
+  "r2_bus_only": 0.8088,
+  "mae_bus_only": 3.076,
+  "cv_r2_mean": 0.9185,
+  "cv_r2_std": 0.0029,
+  "crowd_accuracy": 0.6896,
+  "crowd_labels": [
+    "Low",
+    "Medium",
+    "High",
+    "Very High"
+  ],
+  "crowd_cutoffs": [
+    25,
+    50,
+    75
+  ],
+  "capacity": {
+    "AC Bus": 50,
+    "AC Car": 4,
+    "Bike": 2,
+    "Bus": 50,
+    "Car": 4,
+    "Mini Bus": 50,
+    "Scooter": 2,
+    "Sleeper": 50
+  },
+  "comparison": [
+    {
+      "name": "Baseline (average per vehicle type)",
+      "mae": 6.07,
+      "rmse": 7.811,
+      "r2": 0.5987,
+      "r2_bus": -0.0013
+    },
+    {
+      "name": "Linear Regression",
+      "mae": 4.287,
+      "rmse": 5.159,
+      "r2": 0.8249,
+      "r2_bus": 0.6628
+    },
+    {
+      "name": "Decision Tree",
+      "mae": 2.95,
+      "rmse": 3.816,
+      "r2": 0.9042,
+      "r2_bus": 0.7639
+    },
+    {
+      "name": "Gradient Boosting",
+      "mae": 2.842,
+      "rmse": 3.483,
+      "r2": 0.9202,
+      "r2_bus": 0.815
+    },
+    {
+      "name": "Random Forest (used in app)",
+      "mae": 2.686,
+      "rmse": 3.432,
+      "r2": 0.9225,
+      "r2_bus": 0.8088
+    }
+  ],
+  "confusion_matrix": [
+    [
+      0,
+      40,
+      0,
+      0
+    ],
+    [
+      0,
+      722,
+      115,
+      9
+    ],
+    [
+      0,
+      204,
+      682,
+      125
+    ],
+    [
+      0,
+      13,
+      239,
+      251
+    ]
+  ],
+  "feature_importance": {
+    "vehicle_type": 0.6564,
+    "rush_hour": 0.1644,
+    "hour": 0.0689,
+    "distance": 0.0265,
+    "day_of_week": 0.022,
+    "is_weekend": 0.0185,
+    "month": 0.0142,
+    "weather": 0.0117,
+    "source": 0.0062,
+    "destination": 0.0059,
+    "holiday": 0.0052
+  }
+}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmed | Smart Transport{% endblock %}
+{% block content %}
+<div class="success-card">
+  <div class="success-icon">✓</div><div class="pill">BOOKING CONFIRMED</div>
+  <h1>Your trip is booked!</h1><p>Booking ID: <b>#{{ booking.id }}</b></p>
+  <div class="ticket">
+    <div class="ticket-route">{{ booking.source }} <span>→</span> {{ booking.destination }}</div>
+    <div class="ticket-grid"><div><small>Date</small><b>{{ booking.travel_date }}</b></div><div><small>Time</small><b>{{ booking.travel_time }}</b></div><div><small>Distance</small><b>{{ booking.distance|round|int }} km</b></div><div><small>Vehicle</small><b>{{ booking.vehicle }}</b></div><div><small>Crowd</small><b class="crowd {{ booking.crowd_level|lower|replace(' ','-') }}">{{ booking.crowd_level }}</b></div><div><small>Fare</small><b>₹{{ '%.0f'|format(booking.fare) }}</b></div></div>
+  </div>
+  <a class="btn primary" href="{{ url_for('bookings') }}">View My Bookings</a>
+  <a class="btn secondary" href="{{ url_for('book') }}">Book Another Trip</a>
+</div>
+{% endblock %}

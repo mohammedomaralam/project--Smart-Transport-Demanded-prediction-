@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Admin | Smart Transport{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="pill">ADMIN</div><h1>Users &amp; Logins</h1><p>How many people registered and logged in to this app.</p></div></div>
+<div class="stats">
+  <div><span>👥</span><b>{{ stats.users }}</b><small>Registered users</small></div>
+  <div><span>🔑</span><b>{{ stats.logins }}</b><small>Total logins</small></div>
+  <div><span>📅</span><b>{{ stats.logins_today }}</b><small>Logins today ({{ stats.users_today }} different users)</small></div>
+  <div><span>🎫</span><b>{{ stats.bookings }}</b><small>Total bookings</small></div>
+</div>
+<div class="card">
+  <div class="card-title"><h2>All users</h2><span class="muted">{{ stats.users_ever_logged_in }} of {{ stats.users }} have logged in at least once</span></div>
+  <div class="table-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Registered</th><th>Logins</th><th>Last login</th><th>Bookings</th></tr></thead><tbody>
+  {% for u in users %}<tr><td>{{ u.id }}</td><td><b>{{ u.name }}</b></td><td>{{ u.email }}</td><td>{{ u.created_at.replace('T',' ') }}</td><td>{{ u.logins }}</td><td>{{ u.last_login.replace('T',' ') if u.last_login else '—' }}</td><td>{{ u.bookings }}</td></tr>
+  {% else %}<tr><td colspan="7" class="empty">No users yet.</td></tr>{% endfor %}
+  </tbody></table></div>
+</div>
+<div class="card" style="margin-top:18px">
+  <h2 style="margin-top:0">Last 10 logins</h2>
+  <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Time</th></tr></thead><tbody>
+  {% for r in recent %}<tr><td>{{ r.name }}</td><td>{{ r.email }}</td><td>{{ r.logged_at.replace('T',' ') }}</td></tr>
+  {% else %}<tr><td colspan="3" class="empty">No logins recorded yet (logins are recorded from now on).</td></tr>{% endfor %}
+  </tbody></table></div>
+</div>
+{% endblock %}

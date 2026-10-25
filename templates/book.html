@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Book Trip | Smart Transport{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="pill">SMART BOOKING</div><h1>Book Your Trip</h1><p>Enter your journey details to get distance, fare and crowd prediction.</p></div></div>
+<div class="booking-grid">
+  <form class="card form-card" method="post">
+    <h2>Journey Details</h2><p class="muted">All fields are required.</p>
+    <div class="form-grid">
+      <label>From<select name="source" required>{% for city in cities %}<option {% if result and result.source==city %}selected{% endif %}>{{ city }}</option>{% endfor %}</select></label>
+      <label>To<select name="destination" required>{% for city in cities %}<option {% if (result and result.destination==city) or (not result and city=='Raipur') %}selected{% endif %}>{{ city }}</option>{% endfor %}</select></label>
+      <label>Travel Date<input type="date" name="travel_date" value="{{ result.date if result else '' }}" required></label>
+      <label>Travel Time<input type="time" name="travel_time" min="05:00" max="22:59" value="{{ result.time if result else '08:30' }}" required></label>
+      <label>Weather<select name="weather">{% for w in weather_options %}<option {% if result and result.weather==w %}selected{% endif %}>{{ w }}</option>{% endfor %}</select></label>
+      <label>Vehicle<select name="vehicle">{% for v in vehicles %}<option {% if result and result.vehicle==v %}selected{% endif %}>{{ v }}</option>{% endfor %}</select></label>
+      <label>Passengers<select name="passengers">{% for n in range(1,11) %}<option {% if result and result.passengers==n %}selected{% endif %}>{{ n }}</option>{% endfor %}</select></label>
+      <label>Public Holiday?<select name="holiday"><option value="0" {% if result and result.holiday==0 %}selected{% endif %}>No</option><option value="1" {% if result and result.holiday==1 %}selected{% endif %}>Yes</option></select></label>
+    </div>
+    <button class="btn primary full">🔮 Check Demand & Fare</button>
+  </form>
+  <div class="card prediction-card">
+    <h2>Prediction</h2>
+    {% if result %}
+      <div class="route-big">{{ result.source }} <span>→</span> {{ result.destination }}</div>
+      <div class="prediction-number">{{ result.demand }}<small>% occupancy</small></div>
+      <div class="crowd {{ result.crowd|lower|replace(' ','-') }}">{{ result.crowd }} Crowd</div>
+      <div class="prediction-list">
+        <div><span>📍 Distance</span><b>{{ result.distance|round|int }} km</b></div>
+        <div><span>🚌 Vehicle</span><b>{{ result.vehicle }}</b></div>
+        <div><span>👥 Passengers</span><b>{{ result.passengers }}</b></div>
+        {% if result.seats is not none %}<div><span>🪑 Expected seats booked</span><b>{{ result.seats }}</b></div>{% endif %}
+        <div><span>💰 Estimated Fare</span><b>₹{{ '%.0f'|format(result.fare) }}</b></div>
+        <div><span>🤖 Predicted by</span><b>{{ result.engine }}</b></div>
+      </div>
+      <div class="tip">💡 {% if result.crowd in ['High','Very High'] %}Consider a different time to avoid heavy crowd.{% else %}This trip currently looks relatively comfortable.{% endif %}</div>
+      {% if result.alternatives %}
+      <div class="alt-box"><b>{% if result.crowd in ['High','Very High'] %}🕒 Quieter departure times{% else %}🕒 Quietest times for this trip{% endif %}</b>
+        {% for a in result.alternatives %}
+        <div class="alt-row"><span>{{ a.time }}</span><span class="crowd {{ a.crowd|lower|replace(' ','-') }}">{{ a.crowd }}</span><span>{{ a.demand }}%</span>
+          <small>{% if a.saving > 0 %}{{ a.saving }} pts less crowded{% else %}{{ (-a.saving)|round(1) }} pts busier{% endif %}</small></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <form method="post" class="confirm-form">
+        {% for key,value in result.items() if key not in ['seats','engine','alternatives'] %}<input type="hidden" name="{{ {'date':'travel_date','time':'travel_time'}.get(key,key) }}" value="{{ value }}">{% endfor %}
+        <input type="hidden" name="confirm_booking" value="yes">
+        <button class="btn primary full">🎫 Confirm Booking</button>
+      </form>
+    {% else %}
+      <div class="empty prediction-empty"><div>🤖</div><b>Your prediction will appear here</b><span>Enter trip details and click Check Demand & Fare.</span></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

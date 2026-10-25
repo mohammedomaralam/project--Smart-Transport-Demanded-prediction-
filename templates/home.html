@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Smart Transport | Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <div class="pill">🤖 MACHINE LEARNING POWERED</div>
+    <h1>Book your trip.<br><span>Know the crowd.</span></h1>
+    <p>Smart Transport predicts passenger demand and crowd levels for routes between Durg, Raipur, Bilaspur and Rajnandgaon.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="{{ url_for('register') }}">Get Started →</a>
+      <a class="btn secondary" href="{{ url_for('login') }}">I already have an account</a>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="mini-label">LIVE PREDICTION PREVIEW</div>
+    <div class="route">Durg <b>→</b> Raipur</div>
+    <div class="preview-row"><span>Distance</span><b>42 km</b></div>
+    <div class="preview-row"><span>Demand</span><b>78%</b></div>
+    <div class="crowd high">HIGH CROWD</div>
+    <div class="tip">💡 Try a non-peak time for a potentially quieter trip.</div>
+  </div>
+</section>
+<section class="features">
+  <div><b>🔐 Secure Login</b><span>Create your own account.</span></div>
+  <div><b>🚌 Easy Booking</b><span>Select route, date and vehicle.</span></div>
+  <div><b>📊 Crowd Prediction</b><span>See demand before booking.</span></div>
+  <div><b>🎫 Booking History</b><span>Manage your previous trips.</span></div>
+</section>
+{% endblock %}

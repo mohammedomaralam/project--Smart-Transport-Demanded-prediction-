@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}About | Smart Transport{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="pill">MINOR PROJECT • 2026</div><h1>About Smart Transport Demand Prediction</h1><p>A student project for exploring inter-city passenger demand across selected Chhattisgarh routes.</p></div></div>
+<div class="card about">
+  <h2>Project objective</h2>
+  <p>Estimate passenger demand, classify expected crowd as Low, Medium, High, or Very High, and help users compare journey timing before booking.</p>
+  <div class="about-grid">
+    <div><h3>Routes</h3><p>Durg, Raipur, Bilaspur, and Rajnandgaon.</p></div>
+    <div><h3>Data</h3><p>Designed for travel date/time, route, weather, vehicle type, fare, and passenger booking information.</p></div>
+    <div><h3>Technology</h3><p>Python, Flask, SQLite, HTML, CSS, JavaScript, and scikit-learn for planned ML integration.</p></div>
+    <div><h3>Prediction method</h3><p>A scikit-learn Random Forest predicts seats booked; the app converts it to a demand percentage and a Low / Medium / High / Very High crowd level. See the Model Status page for measured metrics.</p></div>
+  </div>
+</div>
+{% endblock %}

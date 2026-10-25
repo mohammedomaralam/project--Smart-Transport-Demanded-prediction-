@@ -1,0 +1,45 @@
+{
+  "rows": [
+    {
+      "vehicle": "Mini Bus",
+      "records": 2002,
+      "percent": 16.7
+    },
+    {
+      "vehicle": "Bus",
+      "records": 4042,
+      "percent": 33.7
+    },
+    {
+      "vehicle": "AC Bus",
+      "records": 2469,
+      "percent": 20.6
+    },
+    {
+      "vehicle": "Sleeper",
+      "records": 1487,
+      "percent": 12.4
+    },
+    {
+      "vehicle": "Car",
+      "records": 500,
+      "percent": 4.2
+    },
+    {
+      "vehicle": "AC Car",
+      "records": 500,
+      "percent": 4.2
+    },
+    {
+      "vehicle": "Scooter",
+      "records": 500,
+      "percent": 4.2
+    },
+    {
+      "vehicle": "Bike",
+      "records": 500,
+      "percent": 4.2
+    }
+  ],
+  "total": 12000
+}

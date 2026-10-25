@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+transport.db
+smart-transport.zip
+qr_code.png
+.env

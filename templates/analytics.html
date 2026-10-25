@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Analytics | Smart Transport{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="pill">PROJECT INSIGHTS</div><h1>Transport Analytics</h1>
+  {% if analytics %}<p>Average occupancy (% of seats filled), calculated from your {{ '{:,}'.format(analytics.rows) }}-row dataset.</p>
+  {% else %}<p>Charts appear here once the model has been trained on your dataset.</p>{% endif %}</div></div>
+{% if analytics %}
+<div class="chart-grid">
+  <div class="card chart-card"><h3>Top Routes (avg % occupancy)</h3><canvas id="routeChart" aria-label="Average seats booked by route"></canvas></div>
+  <div class="card chart-card"><h3>Demand by Hour (avg % occupancy)</h3><canvas id="timeChart" aria-label="Average seats booked by hour"></canvas></div>
+  <div class="card chart-card"><h3>Weather vs Demand (avg % occupancy)</h3><canvas id="weatherChart" aria-label="Average seats booked by weather"></canvas></div>
+  <div class="card chart-card"><h3>Weekday vs Weekend vs Holiday</h3><canvas id="crowdChart" aria-label="Average seats booked by day type"></canvas></div>
+</div>
+<script>window.ANALYTICS = {{ analytics|tojson }};</script>
+{% else %}
+<div class="card"><div class="empty">No analytics data yet. Run <code>python train_model.py data/cleaned_file.xlsx</code>, then reload this page.</div></div>
+{% endif %}
+{% endblock %}

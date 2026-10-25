@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Smart Transport{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="pill">USER DASHBOARD</div><h1>Hello, {{ session.get('user_name') }} 👋</h1><p>Plan your next journey with demand prediction.</p></div><a class="btn primary" href="{{ url_for('book') }}">🚌 Book a Trip</a></div>
+<div class="stats">
+  <div><span>🎫</span><b>{{ booking_count }}</b><small>Total Bookings</small></div>
+  <div><span>📍</span><b>4</b><small>Major Cities</small></div>
+  <div><span>🤖</span><b>ML</b><small>Demand Prediction</small></div>
+  <div><span>🚦</span><b>4</b><small>Crowd Levels</small></div>
+</div>
+<div class="card">
+  <div class="card-title"><h2>Recent Bookings</h2><a href="{{ url_for('bookings') }}">View all</a></div>
+  {% if bookings %}
+  <div class="table-wrap"><table><thead><tr><th>Route</th><th>Date</th><th>Vehicle</th><th>Crowd</th><th>Fare</th></tr></thead>
+  <tbody>{% for b in bookings %}<tr><td><b>{{ b.source }} → {{ b.destination }}</b><small>{{ b.distance|round|int }} km</small></td><td>{{ b.travel_date }}<small>{{ b.travel_time }}</small></td><td>{{ b.vehicle }}</td><td><span class="crowd {{ b.crowd_level|lower|replace(' ','-') }}">{{ b.crowd_level }}</span></td><td>₹{{ '%.0f'|format(b.fare) }}</td></tr>{% endfor %}</tbody></table></div>
+  {% else %}<div class="empty">No bookings yet. Your first trip can be booked in a few clicks.</div>{% endif %}
+</div>
+{% endblock %}

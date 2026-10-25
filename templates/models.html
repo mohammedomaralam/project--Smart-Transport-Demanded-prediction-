@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Model Status | Smart Transport{% endblock %}
+{% block content %}
+<div class="page-head"><div><div class="pill">MACHINE LEARNING</div><h1>Model Performance &amp; Status</h1><p>All values on this page are measured from the trained model and your dataset (saved by <code>train_model.py</code>).</p></div></div>
+
+<div class="card">
+  {% if model_connected and metrics %}
+    <div class="card-title"><h2>Random Forest model connected</h2><span class="confirmed">LIVE</span></div>
+    <p class="muted">Booking predictions use <b>{{ metrics.model }}</b> to predict <code>{{ metrics.target }}</code>. Trained on {{ metrics.n_train }} rows and tested on {{ metrics.n_test }} unseen rows ({{ metrics.rows }} total, file <code>{{ metrics.dataset_file }}</code>, trained {{ metrics.trained_at }}).</p>
+    <div class="stats">
+      <div><span>📉</span><b>{{ metrics.mae }}</b><small>MAE (seats)</small></div>
+      <div><span>📐</span><b>{{ metrics.rmse }}</b><small>RMSE (seats)</small></div>
+      <div><span>📈</span><b>{{ metrics.r2 }}</b><small>R² (test set)</small></div>
+      <div><span>🎯</span><b>{{ '%.1f'|format(metrics.crowd_accuracy * 100) }}%</b><small>Crowd-level accuracy</small></div>
+    </div>
+    <p class="muted">5-fold cross-validated R²: <b>{{ metrics.cv_r2_mean }}</b> ± {{ metrics.cv_r2_std }}. Within the 50-seat vehicles only (Mini Bus, Bus, AC Bus, Sleeper): R² <b>{{ metrics.r2_bus_only }}</b>, MAE <b>{{ metrics.mae_bus_only }}</b> seats. Crowd level is based on occupancy = predicted seats ÷ vehicle capacity
+      (Low &lt; {{ metrics.crowd_cutoffs[0] }}%, Medium &lt; {{ metrics.crowd_cutoffs[1] }}%, High &lt; {{ metrics.crowd_cutoffs[2] }}%, Very High otherwise).</p>
+  {% else %}
+    <h2>Random Forest model not connected yet</h2>
+    <p>No trained model was found in the <code>model/</code> folder, so the booking page uses a demo formula. Run <code>python train_model.py data/cleaned_file.xlsx</code> and restart the app to connect the real model and see measured metrics here.</p>
+  {% endif %}
+</div>
+
+{% if metrics and metrics.comparison %}
+<div class="card" style="margin-top:18px">
+  <div class="card-title"><h2>Model Comparison</h2><span class="muted">Same train/test split for every model</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Model</th><th>MAE</th><th>RMSE</th><th>R²</th><th>R² (buses only)</th></tr></thead><tbody>
+  {% for c in metrics.comparison %}<tr {% if 'Random Forest' in c.name %}class="total-row"{% endif %}><td><b>{{ c.name }}</b></td><td>{{ c.mae }}</td><td>{{ c.rmse }}</td><td>{{ c.r2 }}</td><td>{{ c.r2_bus }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p class="muted">The baseline only knows the vehicle type. A useful model must beat it, especially in the bus-only column.</p>
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:18px">
+  <div class="card-title"><h2>Vehicle Records</h2><span class="muted">From the training dataset</span></div>
+  {% if vehicle_data %}
+  <div class="table-wrap"><table class="vehicle-table"><thead><tr><th>Vehicle type</th><th>Records</th><th>Share</th></tr></thead><tbody>
+    {% for r in vehicle_data.rows %}
+    <tr><td><b>{{ r.vehicle }}</b></td><td>{{ '{:,}'.format(r.records) }}</td>
+      <td><div class="bar"><i style="width:{{ r.percent }}%"></i></div><small>{{ r.percent }}%</small></td></tr>
+    {% endfor %}
+    <tr class="total-row"><td><b>Total</b></td><td><b>{{ '{:,}'.format(vehicle_data.total) }}</b></td><td><b>100%</b></td></tr>
+  </tbody></table></div>
+  {% else %}
+  <div class="empty">Vehicle records appear here after you run <code>train_model.py</code> on your dataset.</div>
+  {% endif %}
+</div>
+
+{% if metrics %}
+<div class="chart-grid" style="margin-top:18px">
+  <div class="card">
+    <h3 style="margin-top:0">What drives the prediction</h3>
+    <p class="muted">Feature importance from the Random Forest.</p>
+    {% for name, val in metrics.feature_importance.items() %}
+    <div class="imp-row"><span>{{ name }}</span><div class="bar"><i style="width:{{ (val * 100)|round(1) }}%"></i></div><b>{{ (val * 100)|round(1) }}%</b></div>
+    {% endfor %}
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Crowd-level confusion matrix</h3>
+    <p class="muted">Rows = actual, columns = predicted (test set).</p>
+    <div class="table-wrap"><table class="cm"><thead><tr><th></th>{% for l in metrics.crowd_labels %}<th>{{ l }}</th>{% endfor %}</tr></thead><tbody>
+      {% for row in metrics.confusion_matrix %}{% set ri = loop.index0 %}
+      <tr><th>{{ metrics.crowd_labels[ri] }}</th>{% for v in row %}<td class="{{ 'diag' if loop.index0 == ri else '' }}">{{ v }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </tbody></table></div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Smart Transport{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="{{ url_for('home') }}" aria-label="Smart Transport home">
+    <img src="{{ url_for('static', filename='smart-transport-logo.jpg') }}" alt="Smart Transport Demand logo">
+    <span><strong>Smart Transport</strong><small>Demand Prediction</small></span>
+  </a>
+  <nav>
+    {% if session.get('user_id') %}
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('book') }}">Book Trip</a>
+      <a href="{{ url_for('bookings') }}">My Bookings</a>
+      <a href="{{ url_for('analytics') }}">Analytics</a>
+      <a href="{{ url_for('models') }}">Model Status</a>
+      <a href="{{ url_for('about') }}">About</a>
+      {% if session.get('is_admin') %}<a href="{{ url_for('admin') }}">Admin</a>{% endif %}
+      <span class="nav-user">Hi, {{ session.get('user_name', 'Traveler').split(' ')[0] }}</span>
+      <a class="logout" href="{{ url_for('logout') }}">Log out ↗</a>
+    {% else %}
+      <a href="{{ url_for('analytics') }}">Analytics</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a class="nav-login" href="{{ url_for('login') }}">Log in</a>
+      <a class="nav-cta" href="{{ url_for('register') }}">Sign up free <span aria-hidden="true">→</span></a>
+    {% endif %}
+  </nav>
+</header>
+<main class="container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+{% block content %}{% endblock %}
+</main>
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+<footer>Smart Transport Demand Prediction • Minor Project 2026</footer>
+</body>
+</html>
